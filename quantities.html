@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+  <!-- Latest compiled and minified JavaScript -->
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+
+  <title>Products Controller</title>
+
+  <script type='text/javascript'>
+
+  var myAppModule = angular.module('myApp', []);
+  myAppModule.factory('productFactory', function (){
+      // The factory is nothing more than a function that returns an object
+    var products = [
+          {Name: 'Alex', Price: "$23.99"}, 
+          {Name: 'Erin', Price: "$33.99"}, 
+          {Name: 'Erick', Price: "$88.99"}
+    ];
+    var factory = {};
+    // Add a getStudents key to the factory object with a value of a function.
+    factory.getProducts = function (callback){
+        // Pass the students to a callback to be used by whoever calls the method
+        callback(products);
+    }
+    factory.addProduct = function (product){
+      products.push(product);
+    }
+      // Most important step: return the object so it can be used by the rest of our angular code
+    return factory;
+  });
+  myAppModule.controller('productsController', function ($scope, productFactory){
+    $scope.products = [];
+    productFactory.getProducts(function (data){
+        $scope.products = data;
+    })
+    $scope.addProduct = function (){
+        $scope.newProduct.quantity = 50;
+        productFactory.addProduct($scope.newProduct);
+    }
+    $scope.removeProduct = function (product){
+        //  indexOf() calculates the index of the item whose value matches what we pass it.  Look it up!
+        $scope.products.splice($scope.products.indexOf(product), 1);
+    }
+  });
+
+  myAppModule.controller('quantitiesController', function ($scope, productFactory){
+    $scope.products = [];
+
+    productFactory.getProducts(function (data){
+        $scope.products = data;
+    })
+
+    $scope.buyProduct = function (product){
+        //  indexOf() calculates the index of the item whose value matches what we pass it.  Look it up!
+        if (product.quantity != "Product Sold Out") {
+          product.quantity -= 1;
+        }
+        if (product.quantity < 1) {
+          product.quantity = "Product Sold Out"
+        }
+    }
+  });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class='col-md-8' ng-controller='productsController'>
+        <h2>Products Controller</h2>
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-sm-2">Product Name:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="Enter Product Name" ng-model='newProduct.Name'>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-2">Product Price:</label>
+              <div class="col-sm-10">          
+                <input type="text" class="form-control" placeholder="Enter Product Price" ng-model='newProduct.Price'>
+              </div>
+            </div>
+            <div class="form-group">        
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success" ng-click='addProduct()'>Create Product</button>
+              </div>
+            </div>
+          </form>      
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Product Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody ng-repeat="product in products">
+              <tr>
+                <td>{{ product.Name }}</td>
+                <td>{{ product.Price }}</td>
+                <td><button type="button" class="btn btn-danger" ng-click='removeProduct(product)'>Remove Product</button></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class='col-md-8' ng-controller='quantitiesController'>
+        <h2>Quantities Controller</h2>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Product Price</th>
+                <th>Qty Available</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody ng-repeat="product in products">
+              <tr>
+                <td>{{ product.Name }}</td>
+                <td>{{ product.Price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td><button type="button" class="btn btn-danger" ng-click='buyProduct(product)'>Buy Product</button></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
