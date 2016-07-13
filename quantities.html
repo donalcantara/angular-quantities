@@ -18,8 +18,8 @@
   myAppModule.factory('productFactory', function (){
       // The factory is nothing more than a function that returns an object
     var products = [
-          {Name: 'Alex', Price: "$23.99"}, 
-          {Name: 'Erin', Price: "$33.99"}, 
+          {Name: 'Alex', Price: "$23.99", quantity: 50}, 
+          {Name: 'Erin', Price: "$33.99", quantity: 50}
     ];
     var factory = {};
     // Add a getStudents key to the factory object with a value of a function.
@@ -33,6 +33,7 @@
       // Most important step: return the object so it can be used by the rest of our angular code
     return factory;
   });
+
   myAppModule.controller('productsController', function ($scope, productFactory){
     $scope.products = [];
     productFactory.getProducts(function (data){
@@ -43,7 +44,7 @@
         productFactory.addProduct($scope.newProduct);
     }
     $scope.removeProduct = function (product){
-        //  indexOf() calculates the index of the item whose value matches what we pass it.  Look it up!
+        //  indexOf() calculates the index of the item whose value matches what we pass it.
         $scope.products.splice($scope.products.indexOf(product), 1);
     }
   });
@@ -55,8 +56,8 @@
         $scope.products = data;
     })
 
-    $scope.buyProduct = function (product){
-        //  indexOf() calculates the index of the item whose value matches what we pass it.  Look it up!
+    $scope.buyProduct = function(product){
+        //  indexOf() calculates the index of the item whose value matches what we pass it.
         if (product.quantity != "Product Sold Out") {
           product.quantity -= 1;
         }
