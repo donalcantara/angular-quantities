@@ -15,6 +15,7 @@
   <script type='text/javascript'>
 
   var myAppModule = angular.module('myApp', []);
+  
   myAppModule.factory('productFactory', function (){
       // The factory is nothing more than a function that returns an object
     var products = [
@@ -22,15 +23,13 @@
           {Name: 'Erin', Price: "$33.99", quantity: 50}
     ];
     var factory = {};
-    // Add a getStudents key to the factory object with a value of a function.
     factory.getProducts = function (callback){
-        // Pass the students to a callback to be used by whoever calls the method
         callback(products);
     }
     factory.addProduct = function (product){
       products.push(product);
     }
-      // Most important step: return the object so it can be used by the rest of our angular code
+      // Return the object so it can be used by the rest of our angular code
     return factory;
   });
 
@@ -60,7 +59,7 @@
         //  indexOf() calculates the index of the item whose value matches what we pass it.
         if (product.quantity != "Product Sold Out") {
           product.quantity -= 1;
-        }
+        } 
         if (product.quantity < 1) {
           product.quantity = "Product Sold Out"
         }
